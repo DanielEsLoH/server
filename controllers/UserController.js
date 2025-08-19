@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 
 // Generate JWT Token
 const generateToken = (userId) => {
-  const payload = { userId };
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30d" });
+  const payload = userId;
+  return jwt.sign(payload, process.env.JWT_SECRET);
 };
 
 // Register User
@@ -40,7 +40,6 @@ export const registerUser = async (req, res) => {
     res.json({
       success: false,
       message: error.message,
-      error: error.message,
     });
   }
 };
@@ -74,7 +73,22 @@ export const loginUser = async (req, res) => {
     res.json({
       success: false,
       message: error.message,
-      error: error.message,
+    });
+  }
+};
+//Get User data using Token (JWT)
+export const getUserData = async (req, res) => {
+  try {
+    const { user } = req;
+    res.json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.json({
+      success: false,
+      message: error.message,
     });
   }
 };
