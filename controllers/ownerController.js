@@ -65,8 +65,11 @@ export const getOwnersCars = async (req, res) => {
 export const toggleCarAvailability = async (req, res) => {
   try {
     const { _id } = req.user;
-    const { carId } = req.body;
-    const car = await Car.findById(carId);
+    const { id } = req.params;
+    const car = await Car.findById(id);
+    if (!car) {
+      return res.json({ success: false, message: "Car not found" });
+    }
 
     // Checking if car belongs to the user
     if (car.owner.toString() !== _id.toString()) {
@@ -76,7 +79,7 @@ export const toggleCarAvailability = async (req, res) => {
     car.isAvailable = !car.isAvailable;
     await car.save();
 
-    res.json({ success: true, message: "Car availability updated" });
+    res.json({ success: true, message: "Availability Toggled" });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });

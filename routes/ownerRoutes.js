@@ -15,8 +15,8 @@ const ownerRouter = express.Router();
 ownerRouter.post("/change-role", protect, changeRoleToOwner);
 ownerRouter.post("/add-car", upload.single("image"), protect, addCar);
 ownerRouter.get("/cars", protect, getOwnersCars);
-ownerRouter.post("toggle-car", protect, toggleCarAvailability);
-ownerRouter.delete("/delete-car", protect, deleteCar);
+ownerRouter.patch("/toggle-car/:id/availability", protect, toggleCarAvailability);
+ownerRouter.delete("/delete-car/:id", protect, deleteCar);
 // API to get Owner Dashboard Data
 ownerRouter.get("/dashboard", protect, getDashboardData);
 ownerRouter.post(
