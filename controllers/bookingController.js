@@ -99,8 +99,12 @@ export const getOwnerBookings = async (req, res) => {
 export const changeBookingStatus = async (req, res) => {
   try {
     const { _id } = req.user;
-    const { BookingId, status } = req.body;
-    const booking = await Booking.findById(BookingId);
+    const { bookingId } = req.params;
+    const { status } = req.body;
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.json({ success: false, message: "Booking not found" });
+    }
     if (booking.owner.toString() !== _id.toString()) {
       return res.json({ success: false, message: "Unauthorized" });
     }
