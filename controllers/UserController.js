@@ -5,8 +5,9 @@ import Car from "../models/Car.js";
 
 // Generate JWT Token
 const generateToken = (userId) => {
-  const payload = userId;
-  return jwt.sign(payload, process.env.JWT_SECRET);
+  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
 };
 
 // Register User
