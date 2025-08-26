@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Car from "../models/Car.js";
+import mongoose from "mongoose";
 
 // Generate JWT Token
 const generateToken = (userId) => {
@@ -99,16 +100,15 @@ export const getUserData = async (req, res) => {
 // Get all cars for the frontend
 export const getCars = async (req, res) => {
   try {
-    const cars = await Car.find({ isAvailable: true });
-    res.json({
-      success: true,
-      cars,
-    });
+    const query = { isAvailable: true };
+    if (req.user?._id) {
+      query.owner = { $ne: new mongoose.Types.ObjectId(req.user._id) };
+    }
+
+    const cars = await Car.find(query).populate("owner", "name email role");
+    return res.json({ success: true, cars });
   } catch (error) {
-    console.log(error.message);
-    res.json({
-      success: false,
-      message: error.message,
-    });
+    console.error("Error en getCars:", error);
+    return res.json({ success: false, message: error.message });
   }
 };
